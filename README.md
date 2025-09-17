@@ -34,7 +34,6 @@ flowchart LR
   S3[(S3 Replay)] -. replays .-> FW
 ```
 
-![RescueMind Architecture](./architecture/architecture.png)
 ---
 
 ## 📦 CDK Stacks
