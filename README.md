@@ -1,7 +1,7 @@
 # 🚨 RescueMind — AI-Powered Emergency Response
 
-Plateforme serverless qui **ingère des signaux en temps réel** (météo, social, IoT), **géocode / clusterise** les incidents, **calcule des routes** et **notifie** les secours.  
-Infra déployée avec **AWS CDK** (Lambda, DynamoDB, S3, EventBridge, OpenSearch, API Gateway WebSocket).
+Serverless platform that **ingests real-time signals** (weather, social, IoT), **geocodes / clusters** incidents, **computes routes**, and **notifies responders**.  
+Infrastructure deployed with **AWS CDK** (Lambda, DynamoDB, S3, EventBridge, OpenSearch, API Gateway WebSocket).
 
 ---
 
@@ -34,23 +34,24 @@ flowchart LR
   S3[(S3 Replay)] -. replays .-> FW
 ```
 
+![RescueMind Architecture](./architecture/architecture.png)
 ---
 
-## 📦 Stacks CDK
+## 📦 CDK Stacks
 
-- **RescueMind-Data** : DynamoDB (incidents), S3 (replay), EventBridge, OpenSearch, Location PlaceIndex.
-- **RescueMind-Agent** : Lambdas métier (fetch, geocode, compute, persist, notify) + permissions & variables d’env.
-- **RescueMind-Api** : API Gateway **WebSocket** (diffusion vers les clients), Lambda `get_incidents`.
+- **RescueMind-Data**: DynamoDB (incidents), S3 (replay), EventBridge, OpenSearch, Location PlaceIndex.
+- **RescueMind-Agent**: Business Lambdas (fetch, geocode, compute, persist, notify) + permissions & env vars.
+- **RescueMind-Api**: **WebSocket API Gateway** (broadcasts to clients), Lambda `get_incidents`.
 
 ---
 
-## 📂 Structure du projet
+## 📂 Project Structure
 
 ```
 rescuemind/
 ├─ cdk/
 │  ├─ bin/
-│  │  └─ app.ts                 # Point d’entrée CDK (instancie les 3 stacks)
+│  │  └─ app.ts                 # CDK entry point (instantiates the 3 stacks)
 │  ├─ lib/
 │  │  ├─ data-plane.ts          # RescueMind-Data
 │  │  ├─ agent.ts               # RescueMind-Agent
@@ -77,7 +78,7 @@ rescuemind/
 │     ├─ index.ts|js
 │     └─ package.json
 │
-├─ __tests__/                    # Tests Jest
+├─ __tests__/                    # Jest tests
 │  ├─ fetch_weather_alerts.test.ts
 │  ├─ geocode_and_cluster.test.ts
 │  ├─ compute_routes.test.ts
@@ -87,8 +88,8 @@ rescuemind/
 │  └─ sample.test.ts
 │
 ├─ docs/
-│  ├─ architecture.mmd           # source du diagramme Mermaid
-│  └─ architecture.png           # export optionnel
+│  ├─ architecture.mmd           # Mermaid source diagram
+│  └─ architecture.png           # optional export
 │
 ├─ jest.config.js
 ├─ tsconfig.json
@@ -98,62 +99,62 @@ rescuemind/
 
 ---
 
-## ✅ Prérequis
+## ✅ Requirements
 
 - Node.js ≥ 18
-- AWS CLI configuré (`aws configure`)
-- CDK installé :  
+- AWS CLI configured (`aws configure`)
+- CDK installed:  
   ```bash
   npm i -g aws-cdk
   ```
 
 ---
 
-## ⚙️ Installation & Déploiement
+## ⚙️ Installation & Deployment
 
 ```bash
-# 1) Installer les dépendances CDK
+# 1) Install CDK dependencies
 cd cdk
 npm install
 
-# 2) Bootstrap (une fois par compte/region)
+# 2) Bootstrap (once per account/region)
 npx cdk bootstrap
 
-# 3) Synthèse (vérifie que tout compile)
+# 3) Synthesize (compile & check)
 npx cdk synth
 
-# 4) Déploiement (tous les stacks)
+# 4) Deploy (all stacks)
 npx cdk deploy --all
 ```
 
-> Pour déployer un stack spécifique :  
-> `npx cdk deploy RescueMind-Data` (ou `RescueMind-Agent`, `RescueMind-Api`)
+> To deploy a specific stack:  
+> `npx cdk deploy RescueMind-Data` (or `RescueMind-Agent`, `RescueMind-Api`)
 
 ---
 
-## 🧪 Tests (Jest)
+## 🧪 Testing (Jest)
 
-À la racine du repo :
+From the repo root:
 
 ```bash
 npm install
 npm test
 ```
 
-> Les tests utilisent `aws-sdk-client-mock` pour stubber les clients AWS v3.
+> Tests use `aws-sdk-client-mock` to stub AWS SDK v3 clients.
 
 ---
 
-## 🔧 Variables d’environnement (Lambdas)
+## 🔧 Environment Variables (Lambdas)
 
-- `TABLE_INCIDENTS` / `TABLE_NAME` : table DynamoDB incidents
-- `REPLAY_BUCKET` : bucket S3 de replay (fixtures)
-- `PLACE_INDEX_NAME` : AWS Location PlaceIndex
-- `OPENSEARCH_ENDPOINT`, `OPENSEARCH_INDEX` : cible d’ingestion
+- `TABLE_INCIDENTS` / `TABLE_NAME`: DynamoDB incidents table
+- `REPLAY_BUCKET`: S3 replay bucket (fixtures)
+- `PLACE_INDEX_NAME`: AWS Location PlaceIndex
+- `OPENSEARCH_ENDPOINT`, `OPENSEARCH_INDEX`: ingestion target
 
 ---
 
-## 🧹 Nettoyage (éviter les coûts)
+## 🧹 Cleanup (avoid AWS costs)
 
 ```bash
 cd cdk
@@ -162,6 +163,6 @@ npx cdk destroy --all
 
 ---
 
-## 📜 Licence
+## 📜 License
 
 MIT
