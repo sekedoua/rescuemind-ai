@@ -1,0 +1,8 @@
+{
+  "name": "lambda-ingest",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@opensearch-project/opensearch": "^2.10.0"
+  }
+}

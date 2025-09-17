@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": ["jest", "node"],
+    "outDir": "dist"
+  },
+  "include": ["lambdas/**/*.ts", "lib/**/*.ts", "bin/**/*.ts", "__tests__/**/*.ts"],
+  "exclude": ["node_modules", "cdk.out", "dist"]
+}

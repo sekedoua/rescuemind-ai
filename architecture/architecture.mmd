@@ -1,0 +1,14 @@
+flowchart TD
+    A[Weather Alerts API] -->|Fetch| B[Lambda: fetch_weather_alerts]
+    C[Social Media API] -->|Ingest| D[Lambda: ingest_social_signals]
+    B --> E[EventBridge Bus]
+    D --> E
+    E --> F[Lambda: geocode_and_cluster]
+    F --> G[Amazon Location Service]
+    F --> H[DynamoDB Incidents Table]
+    H --> I[Lambda: compute_routes]
+    I --> J[DynamoDB Resources Table]
+    H --> K[Lambda: persist_incident]
+    E --> L[Lambda: notify_responders]
+    H --> M[Amazon OpenSearch]
+    L --> N[Responders via WebSocket API]

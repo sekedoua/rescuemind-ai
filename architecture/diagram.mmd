@@ -1,0 +1,16 @@
+flowchart LR
+  U[Responder Web App] -- WebSocket --> WS[(API GW WebSocket)]
+  subgraph AgentLayer[Bedrock AgentCore]
+    AG[Agent] -- action group --> L1[Lambda: fetch_weather_alerts]
+    AG -- action group --> L2[Lambda: geocode_and_cluster]
+    AG -- action group --> L3[Lambda: compute_routes]
+    AG -- action group --> L4[Lambda: persist_incident]
+    AG -- action group --> L5[Lambda: notify_responders]
+  end
+  S3[(S3 Replay)] --> L1
+  L4 --> DDB1[(DynamoDB Incidents)]
+  L3 --> DDB1
+  L5 --> WS
+  U -->|View incidents & routes| CF[(CloudFront + S3 Site)]
+  AG <--|Knowledge| KB[(Bedrock KB / Amazon Q)]
+  EV[EventBridge] --> AG

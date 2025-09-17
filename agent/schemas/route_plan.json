@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "route_plan",
+  "type": "object",
+  "required": ["start", "end", "constraints"],
+  "properties": {
+    "start": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+    "end":   { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+    "constraints": { "type": "object", "properties": { "avoidFloodZones": { "type": "boolean" } } }
+  }
+}
