@@ -162,6 +162,21 @@ npx cdk destroy --all
 
 ---
 
+## 🏗 Architecture & Best Practices
+
+This project has been reviewed against the [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/).
+
+**Summary:**
+- ✅ Infrastructure as Code (AWS CDK)
+- ✅ Event-driven microservices (Lambdas + EventBridge)
+- ✅ Least-privilege IAM for Lambdas
+- ⚠️ Monitoring & DLQs still to be added
+- ⚠️ Secrets should be stored in AWS Secrets Manager
+- ⚠️ OpenSearch HA & cost governance under review
+
+👉 See [docs/WAF-Review.md](docs/WAF-Review.md) for the full detailed review.
+
+
 ## 📜 License
 
 MIT
