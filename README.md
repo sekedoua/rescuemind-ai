@@ -5,6 +5,33 @@ Infrastructure deployed with **AWS CDK** (Lambda, DynamoDB, S3, EventBridge, Ope
 
 ---
 
+## Overview  
+RescueMind is an AI/ML-driven disaster response system built on AWS.  
+It enables real-time ingestion, clustering, and visualization of incident data from multiple sources.  
+The system leverages **AWS Lambda, DynamoDB, OpenSearch, S3, API Gateway, and EventBridge**, with AI-driven geocoding and clustering for faster emergency response.  
+
+## Architecture  
+![Architecture Diagram](docs/architecture.png)  
+
+- **Data Ingestion** – Collects alerts, reports, and signals.  
+- **AI Geocoding & Clustering** – Identifies hotspots and computes optimal responder routes.  
+- **Persistence** – Stores incidents in DynamoDB and indexes signals in OpenSearch.  
+- **Real-Time APIs** – WebSocket + REST APIs for responders and dashboards.  
+- **Replay & Analysis** – S3-based incident replay for audits and simulations.  
+
+## Deployment  
+The project is deployed on AWS with three core stacks:  
+- `RescueMind-Data` – Data storage and EventBridge bus.  
+- `RescueMind-Agent` – Lambda functions for AI-driven workflows.  
+- `RescueMind-Api` – REST + WebSocket APIs for interaction.  
+
+**Deployed API URLs:**  
+- REST API: `https://of1o0i1ui0.execute-api.us-east-1.amazonaws.com`  
+- WebSocket API: `wss://6dv0u3d6l9.execute-api.us-east-1.amazonaws.com/dev`  
+
+## Demo Video  
+👉 [Watch the video presentation here](#) _(link to MP4 once uploaded)_  
+
 ## 🧩 Architecture (Mermaid)
 
 ```mermaid
@@ -176,7 +203,14 @@ This project has been reviewed against the [AWS Well-Architected Framework](http
 
 👉 See [docs/WAF-Review.md](docs/WAF-Review.md) for the full detailed review.
 
+## Acknowledgment  
+
+This project was developed by [@Sekedoua] as part of the **AWS AI/ML Hackathon**.  
+We leveraged **AI tools (ChatGPT)** for support in **code generation, cloud architecture design, documentation, and media creation**.  
+
 
 ## 📜 License
 
 MIT
+
+*"Built by [@Sekedoua], with AI-assisted development and design."*
