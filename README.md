@@ -9,7 +9,6 @@
 ##🚨 Overview
 
 RescueMind is a serverless AI platform that visualizes real-time emergencies and automatically generates action plans using Amazon Bedrock.
-
 The application displays live disaster incidents (floods, fires, earthquakes, etc.) on an interactive map.
 Each incident marker contains an AI-generated summary and response plan, helping responders prioritize actions quickly.
 
@@ -22,6 +21,8 @@ Each incident marker contains an AI-generated summary and response plan, helping
 ✅ Dynamically extensible — add new cities or alerts anytime
 
 ##🧩 Repository Structure
+
+```
 rescuemind/
 ├── cdk/
 │   ├── bin/app.ts
@@ -42,7 +43,7 @@ rescuemind/
 ├── scripts/
 │   └── incidents-batch.json
 └── README.md
-
+```
 
 ##🧱 Architecture
 
@@ -66,8 +67,6 @@ DynamoDB stores incident data
 Amazon Bedrock (Titan Text Lite v1) generates summaries
 
 Deployed using AWS CDK
-
-
 
 
 ##🔗 Endpoints
@@ -189,17 +188,33 @@ Throughout the build, GPT-5 acted as a technical co-engineer, providing:
 
 -Production deployment guidance (S3 + CloudFront)
 
-🎬 Demo Video Outline
+##🧹 Cleanup (avoid AWS costs)
+cd cdk
+npx cdk destroy --all
 
-Intro (10 s) – “This is RescueMind, an AI-powered real-time disaster response map.”
+##🏗 Architecture & Best Practices
 
-Map View (20 s) – Show markers for Miami, Phoenix, Los Angeles, etc.
+This project has been reviewed against the AWS Well-Architected Framework
 
-Popup (20 s) – Click marker → show Bedrock-generated summary and plan.
+#Summary:
 
-Backend (20 s) – Demonstrate /mapdata and /summarize endpoints in console.
+✅ Infrastructure as Code (AWS CDK)
 
-Closing (10 s) – “Fully serverless, built on AWS & Bedrock.”
+✅ Event-driven microservices (Lambdas + EventBridge)
+
+✅ Least-privilege IAM for Lambdas
+
+##🙏 Acknowledgment
+
+This project was developed by [@Sekedoua] as part of the AWS AI/ML Hackathon.
+We leveraged AI tools (ChatGPT) for support in code generation, cloud architecture design, documentation, and media creation.
+
+##📜 License
+
+MIT
+
+"Built by [@Sekedoua], with AI-assisted development and design."
+
 
 🪪 License
 
