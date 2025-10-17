@@ -1,104 +1,75 @@
----
-##🛰️ RescueMind – AI-Powered Disaster Response Map
+# 🛰️ RescueMind – AI-Powered Disaster Response Map
 
-🌐 Live Demo:
-👉 https://d2xbkuqehmb0br.cloudfront.net
+**Live Demo:** [https://d2xbkuqehmb0br.cloudfront.net](https://d2xbkuqehmb0br.cloudfront.net)  
+**API Endpoint:** [https://tj3yov0q6h.execute-api.us-east-1.amazonaws.com/prod](https://tj3yov0q6h.execute-api.us-east-1.amazonaws.com/prod)
 
-⚙️ Backend (API Gateway):
-👉 https://tj3yov0q6h.execute-api.us-east-1.amazonaws.com/prod
 ---
 
-##🚨 Overview
+## 🚨 Overview
 
-RescueMind is a serverless AI platform that visualizes real-time emergencies and automatically generates action plans using Amazon Bedrock.
-The application displays live disaster incidents (floods, fires, earthquakes, etc.) on an interactive map.
-Each incident marker contains an AI-generated summary and response plan, helping responders prioritize actions quickly.
+**RescueMind** is a fully serverless, AI-powered disaster response platform that visualizes real-time emergencies and automatically generates action plans using **Amazon Bedrock (Titan Text Lite v1)**.  
+Each incident appears on an interactive **Leaflet** map with an **AI-generated summary** to help responders quickly prioritize interventions.
+
 ---
 
-##🎨 Features
+## 🎨 Features
 
-✅ Real-time interactive map with Leaflet
-✅ Color-coded markers for incident status
-✅ AI-generated summaries + action plans via Bedrock
-✅ Fully serverless architecture (Lambda, DynamoDB, API Gateway, S3, CloudFront)
-✅ Dynamically extensible — add new cities or alerts anytime
+- 🗺️ Real-time interactive map (Leaflet + React)  
+- 🎯 Color-coded incident markers by status  
+- 🤖 AI-generated summaries and response plans (Amazon Bedrock)  
+- ☁️ Fully serverless architecture (Lambda, DynamoDB, API Gateway, S3, CloudFront)  
+- 🧩 Extensible — easily add new cities or alerts  
+
 ---
 
-##🧩 Repository Structure
+## 🧱 Architecture
 
-```
-rescuemind/
-├── cdk/
-│   ├── bin/app.ts
-│   ├── lib/
-│   │   ├── agent.ts
-│   │   ├── data.ts
-│   │   ├── location.ts
-│   │   ├── map.ts
-│   │   └── api.ts
-│   ├── lambdas/
-│   │   ├── bedrock_summarizer/index.js
-│   │   ├── mapdata/index.js
-│   └── package.json
-├── frontend/
-│   ├── src/Components/Map/IncidentMap.tsx
-│   ├── vite.config.ts
-│   └── package.json
-├── scripts/
-│   └── incidents-batch.json
-└── README.md
-```
----
-##🧱 Architecture
+### **Frontend**
 
-![Architecture Diagram](architecture/Image_22_45_08.png)  
+- Built with **React + Vite + Leaflet**  
+- Hosted on **AWS S3**, distributed via **CloudFront**  
+- Communicates with **API Gateway** for incident and summary endpoints  
+- Displays live map rendering with AI-powered popups  
+
+### **Backend**
+
+- **AWS Lambda** functions behind **API Gateway**  
+- **DynamoDB** stores all incident data  
+- **Amazon Bedrock (Titan Text Lite v1)** generates summaries  
+- Fully deployed using **AWS CDK**  
+
+📘 *Architecture Diagram:*  
+![Architecture Diagram](architecture/Image_22_45_08.png)
+
 ---
 
-#Frontend
-Built with React + Vite + Leaflet
+## 🔗 API Endpoints
 
-Hosted on AWS S3 + CloudFront
+| Method | Path | Description |
+|:-------|:-----|:-------------|
+| GET | `/mapdata` | Returns all active incidents |
+| POST | `/summarize` | Generates AI summary + action plan |
 
-Communicates with API Gateway endpoints for incidents and summaries
-
-Supports live map rendering with AI-powered popups
----
-
-#Backend
-
-AWS Lambda + API Gateway
-
-DynamoDB stores incident data
-
-Amazon Bedrock (Titan Text Lite v1) generates summaries
-
-Deployed using AWS CDK
----
-
-##🔗 Endpoints
----
-#Method	Path	Description
-GET	/mapdata	Returns all active incidents
-POST	/summarize	Generates AI summary + action plan
-
-```
-Example
+**Example request:**
+```bash
 curl -X POST https://tj3yov0q6h.execute-api.us-east-1.amazonaws.com/prod/summarize \
   -H "Content-Type: application/json" \
   -d '{"text": "Flood alert in Miami. Evacuation recommended near downtown."}'
+```
 
-
-Example response:
-
+**Example response:**
+```json
 {
   "summary": "Emergency message: Flood alert in Miami near downtown. Evacuation recommended. Action plan: monitor updates, prepare emergency kits, follow local authorities' instructions."
 }
 ```
----
-##🗺️ Adding New Incidents
 
-Add new incidents directly to the DynamoDB table via AWS CLI:
-```
+---
+
+## 🗺️ Adding New Incidents
+
+Add a new incident to DynamoDB via AWS CLI:
+```bash
 aws dynamodb put-item \
   --table-name RescueMind-Data-IncidentsTable \
   --item '{
@@ -111,31 +82,29 @@ aws dynamodb put-item \
   }'
 ```
 
-
-Batch upload several:
-
-```
+Or batch upload:
+```bash
 aws dynamodb batch-write-item --request-items file://scripts/incidents-batch.json
 ```
 
-Verify that data is live:
-
+Verify data:
+```bash
 curl https://tj3yov0q6h.execute-api.us-east-1.amazonaws.com/prod/mapdata
-
----
-##🚀 Deployment Guide
----
-
-#Backend (CDK)
 ```
+
+---
+
+## 🚀 Deployment Guide
+
+### **Backend (CDK)**
+```bash
 cd cdk
 npx cdk bootstrap
 npx cdk deploy --all
 ```
----
-#Frontend (React + Vite)
 
-```
+### **Frontend (React + Vite)**
+```bash
 cd frontend
 npm ci
 npm run build
@@ -143,96 +112,74 @@ aws s3 sync build/ s3://rescuemind-frontend-bucket --delete
 aws cloudfront create-invalidation --distribution-id YOUR_DIST_ID --paths "/*"
 ```
 
-Ensure API Gateway has correct CORS settings:
+✅ Ensure API Gateway CORS settings:
 ```
-
-Allowed Origin → https://d2xbkuqehmb0br.cloudfront.net
-
+Allowed Origin  → https://d2xbkuqehmb0br.cloudfront.net
 Allowed Methods → GET, POST, OPTIONS
-
 Allowed Headers → Content-Type
 ```
 
-Then redeploy:
-
-```
+Redeploy:
+```bash
 aws apigateway create-deployment --rest-api-id tj3yov0q6h --stage-name prod
 ```
----
-
-##🎨 Features
-
-✅ Real-time interactive map with Leaflet
-✅ Color-coded markers for incident status
-✅ AI-generated summaries + action plans via Bedrock
-✅ Fully serverless architecture (Lambda, DynamoDB, API Gateway, S3, CloudFront)
-✅ Dynamically extensible — add new cities or alerts anytime
-
----
-##🧠 Challenges & Fixes (with GPT-5)
-#Challenge	Resolution
--Lambda ES-module import errors	Converted to CommonJS + adjusted package.json
--Bedrock access denied	Added bedrock:InvokeModel to Lambda IAM policy
--JSON body parsing errors	Implemented safe event parsing in summarizer Lambda
--Missing map markers	Fixed /mapdata response formatting
--“Failed to fetch summary”	Enabled correct CORS configuration for CloudFront
--Build failure with Vite	Upgraded Node to v20.19 and rebuilt frontend
--Timeout on summarizer	Increased memory & timeout in CDK stack
--404 favicon & marker icon bugs	Corrected asset paths in Vite build output
 
 ---
 
-##🧠 How GPT Helped
+## 🧠 Troubleshooting & Fixes
 
-Throughout the build, GPT-5 acted as a technical co-engineer, providing:
-
--AWS CDK refactors and IAM policy design
-
--Lambda debugging and ES module migration
-
--API Gateway CORS setup
-
--Bedrock integration logic
-
--Frontend Leaflet rendering fixes
-
--Production deployment guidance (S3 + CloudFront)
+| Challenge | Resolution |
+|:-----------|:------------|
+| Lambda ES-module import errors | Converted to CommonJS, adjusted `package.json` |
+| Bedrock access denied | Added `bedrock:InvokeModel` to Lambda IAM policy |
+| JSON body parsing errors | Implemented safe event parsing in summarizer Lambda |
+| Missing map markers | Fixed `/mapdata` response formatting |
+| “Failed to fetch summary” | Enabled proper CloudFront CORS configuration |
+| Build failure with Vite | Upgraded Node to v20.19 |
+| Timeout on summarizer | Increased Lambda memory & timeout |
+| 404 favicon / marker icons | Corrected asset paths in Vite build output |
 
 ---
 
-##🧹 Cleanup (avoid AWS costs)
+## 🧠 Role of GPT-5
+
+GPT-5 provided engineering assistance for:
+
+- AWS CDK refactoring and IAM design  
+- Lambda debugging and Bedrock integration  
+- API Gateway + CloudFront CORS setup  
+- Leaflet frontend rendering optimization  
+- Deployment automation (S3 + CloudFront)  
+
+---
+
+## 🧹 Cleanup
+
+To remove all AWS resources and avoid costs:
+```bash
 cd cdk
 npx cdk destroy --all
+```
 
 ---
 
-##🏗 Architecture & Best Practices
+## 🏗 Best Practices
 
-This project has been reviewed against the AWS Well-Architected Framework
-
----
-
-#Summary:
-
-✅ Infrastructure as Code (AWS CDK)
-
-✅ Event-driven microservices (Lambdas + EventBridge)
-
-✅ Least-privilege IAM for Lambdas
+✅ Infrastructure as Code with AWS CDK  
+✅ Event-driven microservices (Lambdas + EventBridge)  
+✅ Least-privilege IAM roles  
+✅ Well-Architected Framework compliance  
 
 ---
 
-##🙏 Acknowledgment
+## 🙏 Acknowledgment
 
-This project was developed by [@Sekedoua] as part of the AWS AI/ML Hackathon.
-We leveraged AI tools (ChatGPT) for support in code generation, cloud architecture design, documentation, and media creation.
+Developed by **[@Sekedoua]** as part of the **AWS AI/ML Hackathon 2025**.  
+AI-assisted with **ChatGPT (GPT-5)** for architecture design, development, and documentation.
+
 ---
 
-##📜 License
+## 📜 License
 
-MIT License © 2025 RescueMind Team
-
-"Built by [@Sekedoua], with AI-assisted development and design."
----
- 
-
+**MIT License © 2025 RescueMind Team**  
+“Built by [@Sekedoua], with AI-assisted development and design.”
