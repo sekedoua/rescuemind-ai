@@ -1,3 +1,4 @@
+---
 ##🛰️ RescueMind – AI-Powered Disaster Response Map
 
 🌐 Live Demo:
@@ -5,12 +6,14 @@
 
 ⚙️ Backend (API Gateway):
 👉 https://tj3yov0q6h.execute-api.us-east-1.amazonaws.com/prod
+---
 
 ##🚨 Overview
 
 RescueMind is a serverless AI platform that visualizes real-time emergencies and automatically generates action plans using Amazon Bedrock.
 The application displays live disaster incidents (floods, fires, earthquakes, etc.) on an interactive map.
 Each incident marker contains an AI-generated summary and response plan, helping responders prioritize actions quickly.
+---
 
 ##🎨 Features
 
@@ -19,6 +22,7 @@ Each incident marker contains an AI-generated summary and response plan, helping
 ✅ AI-generated summaries + action plans via Bedrock
 ✅ Fully serverless architecture (Lambda, DynamoDB, API Gateway, S3, CloudFront)
 ✅ Dynamically extensible — add new cities or alerts anytime
+---
 
 ##🧩 Repository Structure
 
@@ -44,10 +48,11 @@ rescuemind/
 │   └── incidents-batch.json
 └── README.md
 ```
-
+---
 ##🧱 Architecture
 
 ![Architecture Diagram](architecture/Image_22_45_08.png)  
+---
 
 #Frontend
 Built with React + Vite + Leaflet
@@ -57,6 +62,7 @@ Hosted on AWS S3 + CloudFront
 Communicates with API Gateway endpoints for incidents and summaries
 
 Supports live map rendering with AI-powered popups
+---
 
 #Backend
 
@@ -67,10 +73,10 @@ DynamoDB stores incident data
 Amazon Bedrock (Titan Text Lite v1) generates summaries
 
 Deployed using AWS CDK
-
+---
 
 ##🔗 Endpoints
-
+---
 #Method	Path	Description
 GET	/mapdata	Returns all active incidents
 POST	/summarize	Generates AI summary + action plan
@@ -88,7 +94,7 @@ Example response:
   "summary": "Emergency message: Flood alert in Miami near downtown. Evacuation recommended. Action plan: monitor updates, prepare emergency kits, follow local authorities' instructions."
 }
 ```
-
+---
 ##🗺️ Adding New Incidents
 
 Add new incidents directly to the DynamoDB table via AWS CLI:
@@ -116,7 +122,9 @@ Verify that data is live:
 
 curl https://tj3yov0q6h.execute-api.us-east-1.amazonaws.com/prod/mapdata
 
+---
 ##🚀 Deployment Guide
+---
 
 #Backend (CDK)
 ```
@@ -124,7 +132,7 @@ cd cdk
 npx cdk bootstrap
 npx cdk deploy --all
 ```
-
+---
 #Frontend (React + Vite)
 
 ```
@@ -150,6 +158,7 @@ Then redeploy:
 ```
 aws apigateway create-deployment --rest-api-id tj3yov0q6h --stage-name prod
 ```
+---
 
 ##🎨 Features
 
@@ -159,6 +168,7 @@ aws apigateway create-deployment --rest-api-id tj3yov0q6h --stage-name prod
 ✅ Fully serverless architecture (Lambda, DynamoDB, API Gateway, S3, CloudFront)
 ✅ Dynamically extensible — add new cities or alerts anytime
 
+---
 ##🧠 Challenges & Fixes (with GPT-5)
 #Challenge	Resolution
 -Lambda ES-module import errors	Converted to CommonJS + adjusted package.json
@@ -170,7 +180,7 @@ aws apigateway create-deployment --rest-api-id tj3yov0q6h --stage-name prod
 -Timeout on summarizer	Increased memory & timeout in CDK stack
 -404 favicon & marker icon bugs	Corrected asset paths in Vite build output
 
-
+---
 
 ##🧠 How GPT Helped
 
@@ -188,13 +198,19 @@ Throughout the build, GPT-5 acted as a technical co-engineer, providing:
 
 -Production deployment guidance (S3 + CloudFront)
 
+---
+
 ##🧹 Cleanup (avoid AWS costs)
 cd cdk
 npx cdk destroy --all
 
+---
+
 ##🏗 Architecture & Best Practices
 
 This project has been reviewed against the AWS Well-Architected Framework
+
+---
 
 #Summary:
 
@@ -204,18 +220,19 @@ This project has been reviewed against the AWS Well-Architected Framework
 
 ✅ Least-privilege IAM for Lambdas
 
+---
+
 ##🙏 Acknowledgment
 
 This project was developed by [@Sekedoua] as part of the AWS AI/ML Hackathon.
 We leveraged AI tools (ChatGPT) for support in code generation, cloud architecture design, documentation, and media creation.
+---
 
 ##📜 License
 
-MIT
+MIT License © 2025 RescueMind Team
 
 "Built by [@Sekedoua], with AI-assisted development and design."
+---
+ 
 
-
-🪪 License
-
-MIT License © 2025 RescueMind Team
