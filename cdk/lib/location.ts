@@ -1,22 +1,18 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
-import * as location from "aws-cdk-lib/aws-location";
+import * as lambda from "aws-cdk-lib/aws-lambda";
 
 export class LocationStack extends cdk.Stack {
-  public readonly placeIndex: location.CfnPlaceIndex;
+  public readonly geocodeFn: lambda.Function;
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    this.placeIndex = new location.CfnPlaceIndex(this, "RescueMindPlaceIndex", {
-      dataSource: "Esri",
-      dataSourceConfiguration: { intendedUse: "SingleUse" },
-      indexName: "rescuemind-index",
-      pricingPlan: "RequestBasedUsage",
-    });
-
-    new cdk.CfnOutput(this, "PlaceIndexName", {
-      value: this.placeIndex.indexName!,
+    // 🚀 Lambda: Geocode + cluster locations
+    this.geocodeFn = new lambda.Function(this, "GeocodeFn", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset("lambdas/geocode_and_cluster"),
     });
   }
 }

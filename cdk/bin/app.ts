@@ -1,51 +1,32 @@
-#!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
-import { DataStack } from "../lib/data-plane";
 import { AgentStack } from "../lib/agent";
+import { DataStack } from "../lib/data";
+import { LocationStack } from "../lib/location";
+import { MapStack } from "../lib/map";
 import { ApiStack } from "../lib/api";
 
 const app = new cdk.App();
+const env = { account: process.env.CDK_DEFAULT_ACCOUNT, region: "us-east-1" };
 
-const env = {
-  account: process.env.CDK_DEFAULT_ACCOUNT,
-  region: process.env.CDK_DEFAULT_REGION,
-};
-
-// --- Data Plane ---
+// 1️⃣ Core Stacks
 const data = new DataStack(app, "RescueMind-Data", { env });
+const agent = new AgentStack(app, "RescueMind-Agent", { env });
+const location = new LocationStack(app, "RescueMind-Location", { env });
 
-// --- Agent Plane ---
-const agent = new AgentStack(app, "RescueMind-Agent", {
-  env,
+// 2️⃣ Map stack depends on data
+const map = new MapStack(app, "RescueMind-Map", {
   incidentsTable: data.incidentsTable,
-  resourcesTable: data.resourcesTable,
-  replayBucket: data.replayBucket,
-  eventBus: data.eventBus,
-  placeIndex: data.placeIndex,
-  searchDomain: data.searchDomain,
+  env,
 });
 
-// --- API Plane ---
-const api = new ApiStack(app, "RescueMind-Api", {
-  env,
-  incidentsTable: data.incidentsTable,
-  resourcesTable: data.resourcesTable,
-  replayBucket: data.replayBucket,
-  eventBus: data.eventBus,
-  placeIndex: data.placeIndex,
-  searchDomain: data.searchDomain,
-  // Si l’API doit appeler les lambdas agent :
-  fetchFn: agent.fetchFn,
-  geocodeFn: agent.geocodeFn,
-  computeFn: agent.computeFn,
-  persistFn: agent.persistFn,
+// 3️⃣ API Stack connects everything
+new ApiStack(app, "RescueMind-Api", {
   ingestFn: agent.ingestFn,
-});
-
-// --- Outputs ---
-new cdk.CfnOutput(api, "RescueMindHttpApiUrl", {
-  value: api.httpApiUrl,
-});
-new cdk.CfnOutput(api, "RescueMindWsApiUrl", {
-  value: api.wsApiUrl,
+  summarizeFn: agent.summarizeFn,
+  fetchFn: data.fetchFn,
+  geocodeFn: location.geocodeFn,
+  computeFn: data.computeFn,
+  persistFn: data.persistFn,
+  mapDataFn: map.mapDataFn,
+  env,
 });

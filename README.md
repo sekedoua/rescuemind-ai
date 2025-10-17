@@ -1,216 +1,206 @@
-# 🚨 RescueMind — AI-Powered Emergency Response
+##🛰️ RescueMind – AI-Powered Disaster Response Map
 
-Serverless platform that **ingests real-time signals** (weather, social, IoT), **geocodes / clusters** incidents, **computes routes**, and **notifies responders**.  
-Infrastructure deployed with **AWS CDK** (Lambda, DynamoDB, S3, EventBridge, OpenSearch, API Gateway WebSocket).
+🌐 Live Demo:
+👉 https://d2xbkuqehmb0br.cloudfront.net
 
----
+⚙️ Backend (API Gateway):
+👉 https://tj3yov0q6h.execute-api.us-east-1.amazonaws.com/prod
 
-## Overview  
-RescueMind is an AI/ML-driven disaster response system built on AWS.  
-It enables real-time ingestion, clustering, and visualization of incident data from multiple sources.  
-The system leverages **AWS Lambda, DynamoDB, OpenSearch, S3, API Gateway, and EventBridge**, with AI-driven geocoding and clustering for faster emergency response.  
+##🚨 Overview
 
-## Architecture  
-![Architecture Diagram](docs/architecture.png)  
+RescueMind is a serverless AI platform that visualizes real-time emergencies and automatically generates action plans using Amazon Bedrock.
 
-- **Data Ingestion** – Collects alerts, reports, and signals.  
-- **AI Geocoding & Clustering** – Identifies hotspots and computes optimal responder routes.  
-- **Persistence** – Stores incidents in DynamoDB and indexes signals in OpenSearch.  
-- **Real-Time APIs** – WebSocket + REST APIs for responders and dashboards.  
-- **Replay & Analysis** – S3-based incident replay for audits and simulations.  
+The application displays live disaster incidents (floods, fires, earthquakes, etc.) on an interactive map.
+Each incident marker contains an AI-generated summary and response plan, helping responders prioritize actions quickly.
 
-## Deployment  
-The project is deployed on AWS with three core stacks:  
-- `RescueMind-Data` – Data storage and EventBridge bus.  
-- `RescueMind-Agent` – Lambda functions for AI-driven workflows.  
-- `RescueMind-Api` – REST + WebSocket APIs for interaction.  
+##🎨 Features
 
-**Deployed API URLs:**  
-- REST API: `https://of1o0i1ui0.execute-api.us-east-1.amazonaws.com`  
-- WebSocket API: `wss://6dv0u3d6l9.execute-api.us-east-1.amazonaws.com/dev`  
+✅ Real-time interactive map with Leaflet
+✅ Color-coded markers for incident status
+✅ AI-generated summaries + action plans via Bedrock
+✅ Fully serverless architecture (Lambda, DynamoDB, API Gateway, S3, CloudFront)
+✅ Dynamically extensible — add new cities or alerts anytime
 
-## Demo Video  
-👉 [Watch the video presentation here](#) _(link to MP4 once uploaded)_  
-
-## 🧩 Architecture (Mermaid)
-
-```mermaid
-flowchart LR
-  subgraph Ingestion
-    FW[Fetch Weather Alerts]
-    SS[Ingest Social Signals]
-  end
-
-  subgraph Processing
-    GC[Geocode & Cluster]
-    CR[Compute Routes]
-    PI[Persist Incident]
-    NR[Notify Responders]
-  end
-
-  FW --> EB((EventBridge))
-  SS --> EB
-  EB --> GC --> PI
-  EB --> CR --> NR
-
-  PI --> DDB[(DynamoDB Incidents)]
-  CR --> DDB
-  NR --> WS{{API Gateway WebSocket}}
-
-  INDX[(OpenSearch)] <---> GC
-  S3[(S3 Replay)] -. replays .-> FW
-```
-
----
-
-## 📦 CDK Stacks
-
-- **RescueMind-Data**: DynamoDB (incidents), S3 (replay), EventBridge, OpenSearch, Location PlaceIndex.
-- **RescueMind-Agent**: Business Lambdas (fetch, geocode, compute, persist, notify) + permissions & env vars.
-- **RescueMind-Api**: **WebSocket API Gateway** (broadcasts to clients), Lambda `get_incidents`.
-
----
-
-## 📂 Project Structure
-
-```
+##🧩 Repository Structure
 rescuemind/
-├─ cdk/
-│  ├─ bin/
-│  │  └─ app.ts                 # CDK entry point (instantiates the 3 stacks)
-│  ├─ lib/
-│  │  ├─ data-plane.ts          # RescueMind-Data
-│  │  ├─ agent.ts               # RescueMind-Agent
-│  │  └─ api.ts                 # RescueMind-Api
-│  └─ package.json
-│
-├─ lambdas/
-│  ├─ fetch_weather_alerts/
-│  │  ├─ index.ts|js
-│  │  └─ package.json
-│  ├─ geocode_and_cluster/
-│  │  ├─ index.ts|js
-│  │  └─ package.json
-│  ├─ compute_routes/
-│  │  ├─ index.ts|js
-│  │  └─ package.json
-│  ├─ persist_incident/
-│  │  ├─ index.ts|js
-│  │  └─ package.json
-│  ├─ notify_responders/
-│  │  ├─ index.ts|js
-│  │  └─ package.json
-│  └─ get_incidents/
-│     ├─ index.ts|js
-│     └─ package.json
-│
-├─ __tests__/                    # Jest tests
-│  ├─ fetch_weather_alerts.test.ts
-│  ├─ geocode_and_cluster.test.ts
-│  ├─ compute_routes.test.ts
-│  ├─ persist_incident.test.ts
-│  ├─ ingest_social_signals.test.ts
-│  ├─ notify_responders.test.ts
-│  └─ sample.test.ts
-│
-├─ docs/
-│  ├─ architecture.mmd           # Mermaid source diagram
-│  └─ architecture.png           # optional export
-│
-├─ jest.config.js
-├─ tsconfig.json
-├─ package.json
-└─ README.md
+├── cdk/
+│   ├── bin/app.ts
+│   ├── lib/
+│   │   ├── agent.ts
+│   │   ├── data.ts
+│   │   ├── location.ts
+│   │   ├── map.ts
+│   │   └── api.ts
+│   ├── lambdas/
+│   │   ├── bedrock_summarizer/index.js
+│   │   ├── mapdata/index.js
+│   └── package.json
+├── frontend/
+│   ├── src/Components/Map/IncidentMap.tsx
+│   ├── vite.config.ts
+│   └── package.json
+├── scripts/
+│   └── incidents-batch.json
+└── README.md
+
+
+##🧱 Architecture
+
+![Architecture Diagram](architecture/Image_22_45_08.png)  
+
+#Frontend
+Built with React + Vite + Leaflet
+
+Hosted on AWS S3 + CloudFront
+
+Communicates with API Gateway endpoints for incidents and summaries
+
+Supports live map rendering with AI-powered popups
+
+#Backend
+
+AWS Lambda + API Gateway
+
+DynamoDB stores incident data
+
+Amazon Bedrock (Titan Text Lite v1) generates summaries
+
+Deployed using AWS CDK
+
+
+
+
+##🔗 Endpoints
+
+#Method	Path	Description
+GET	/mapdata	Returns all active incidents
+POST	/summarize	Generates AI summary + action plan
+
+```
+Example
+curl -X POST https://tj3yov0q6h.execute-api.us-east-1.amazonaws.com/prod/summarize \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Flood alert in Miami. Evacuation recommended near downtown."}'
+
+
+Example response:
+
+{
+  "summary": "Emergency message: Flood alert in Miami near downtown. Evacuation recommended. Action plan: monitor updates, prepare emergency kits, follow local authorities' instructions."
+}
 ```
 
----
+##🗺️ Adding New Incidents
 
-## ✅ Requirements
+Add new incidents directly to the DynamoDB table via AWS CLI:
+```
+aws dynamodb put-item \
+  --table-name RescueMind-Data-IncidentsTable \
+  --item '{
+    "incidentId": {"S": "INC-020"},
+    "type": {"S": "wildfire"},
+    "city": {"S": "San Diego"},
+    "latitude": {"N": "32.7157"},
+    "longitude": {"N": "-117.1611"},
+    "status": {"S": "active"}
+  }'
+```
 
-- Node.js ≥ 18
-- AWS CLI configured (`aws configure`)
-- CDK installed:  
-  ```bash
-  npm i -g aws-cdk
-  ```
 
----
+Batch upload several:
 
-## ⚙️ Installation & Deployment
+```
+aws dynamodb batch-write-item --request-items file://scripts/incidents-batch.json
+```
 
-```bash
-# 1) Install CDK dependencies
+Verify that data is live:
+
+curl https://tj3yov0q6h.execute-api.us-east-1.amazonaws.com/prod/mapdata
+
+##🚀 Deployment Guide
+
+#Backend (CDK)
+```
 cd cdk
-npm install
-
-# 2) Bootstrap (once per account/region)
 npx cdk bootstrap
-
-# 3) Synthesize (compile & check)
-npx cdk synth
-
-# 4) Deploy (all stacks)
 npx cdk deploy --all
 ```
 
-> To deploy a specific stack:  
-> `npx cdk deploy RescueMind-Data` (or `RescueMind-Agent`, `RescueMind-Api`)
+#Frontend (React + Vite)
 
----
-
-## 🧪 Testing (Jest)
-
-From the repo root:
-
-```bash
-npm install
-npm test
+```
+cd frontend
+npm ci
+npm run build
+aws s3 sync build/ s3://rescuemind-frontend-bucket --delete
+aws cloudfront create-invalidation --distribution-id YOUR_DIST_ID --paths "/*"
 ```
 
-> Tests use `aws-sdk-client-mock` to stub AWS SDK v3 clients.
-
----
-
-## 🔧 Environment Variables (Lambdas)
-
-- `TABLE_INCIDENTS` / `TABLE_NAME`: DynamoDB incidents table
-- `REPLAY_BUCKET`: S3 replay bucket (fixtures)
-- `PLACE_INDEX_NAME`: AWS Location PlaceIndex
-- `OPENSEARCH_ENDPOINT`, `OPENSEARCH_INDEX`: ingestion target
-
----
-
-## 🧹 Cleanup (avoid AWS costs)
-
-```bash
-cd cdk
-npx cdk destroy --all
+Ensure API Gateway has correct CORS settings:
 ```
 
----
+Allowed Origin → https://d2xbkuqehmb0br.cloudfront.net
 
-## 🏗 Architecture & Best Practices
+Allowed Methods → GET, POST, OPTIONS
 
-This project has been reviewed against the [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/).
+Allowed Headers → Content-Type
+```
 
-**Summary:**
-- ✅ Infrastructure as Code (AWS CDK)
-- ✅ Event-driven microservices (Lambdas + EventBridge)
-- ✅ Least-privilege IAM for Lambdas
-- ⚠️ Monitoring & DLQs still to be added
-- ⚠️ Secrets should be stored in AWS Secrets Manager
-- ⚠️ OpenSearch HA & cost governance under review
+Then redeploy:
 
-👉 See [docs/WAF-Review.md](docs/WAF-Review.md) for the full detailed review.
+```
+aws apigateway create-deployment --rest-api-id tj3yov0q6h --stage-name prod
+```
 
-## Acknowledgment  
+##🎨 Features
 
-This project was developed by [@Sekedoua] as part of the **AWS AI/ML Hackathon**.  
-We leveraged **AI tools (ChatGPT)** for support in **code generation, cloud architecture design, documentation, and media creation**.  
+✅ Real-time interactive map with Leaflet
+✅ Color-coded markers for incident status
+✅ AI-generated summaries + action plans via Bedrock
+✅ Fully serverless architecture (Lambda, DynamoDB, API Gateway, S3, CloudFront)
+✅ Dynamically extensible — add new cities or alerts anytime
+
+##🧠 Challenges & Fixes (with GPT-5)
+#Challenge	Resolution
+-Lambda ES-module import errors	Converted to CommonJS + adjusted package.json
+-Bedrock access denied	Added bedrock:InvokeModel to Lambda IAM policy
+-JSON body parsing errors	Implemented safe event parsing in summarizer Lambda
+-Missing map markers	Fixed /mapdata response formatting
+-“Failed to fetch summary”	Enabled correct CORS configuration for CloudFront
+-Build failure with Vite	Upgraded Node to v20.19 and rebuilt frontend
+-Timeout on summarizer	Increased memory & timeout in CDK stack
+-404 favicon & marker icon bugs	Corrected asset paths in Vite build output
 
 
-## 📜 License
 
-MIT
+##🧠 How GPT Helped
 
-*"Built by [@Sekedoua], with AI-assisted development and design."*
+Throughout the build, GPT-5 acted as a technical co-engineer, providing:
+
+-AWS CDK refactors and IAM policy design
+
+-Lambda debugging and ES module migration
+
+-API Gateway CORS setup
+
+-Bedrock integration logic
+
+-Frontend Leaflet rendering fixes
+
+-Production deployment guidance (S3 + CloudFront)
+
+🎬 Demo Video Outline
+
+Intro (10 s) – “This is RescueMind, an AI-powered real-time disaster response map.”
+
+Map View (20 s) – Show markers for Miami, Phoenix, Los Angeles, etc.
+
+Popup (20 s) – Click marker → show Bedrock-generated summary and plan.
+
+Backend (20 s) – Demonstrate /mapdata and /summarize endpoints in console.
+
+Closing (10 s) – “Fully serverless, built on AWS & Bedrock.”
+
+🪪 License
+
+MIT License © 2025 RescueMind Team

@@ -1,0 +1,9 @@
+{
+  "name": "lambda-geocode-and-cluster",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-location": "^3.637.0",
+    "uuid": "^13.0.0"
+  }
+}

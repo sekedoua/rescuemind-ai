@@ -1,93 +1,59 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
-import * as apigwv2 from "aws-cdk-lib/aws-apigatewayv2";
-import * as integrations from "aws-cdk-lib/aws-apigatewayv2-integrations";
-import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
-import * as s3 from "aws-cdk-lib/aws-s3";
-import * as events from "aws-cdk-lib/aws-events";
-import * as location from "aws-cdk-lib/aws-location";
-import * as opensearch from "aws-cdk-lib/aws-opensearchservice";
+import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 
 export interface ApiProps extends cdk.StackProps {
-  incidentsTable: dynamodb.Table;
-  resourcesTable: dynamodb.Table;
-  replayBucket: s3.Bucket;
-  eventBus: events.EventBus;
-  placeIndex: location.CfnPlaceIndex;
-  searchDomain: opensearch.Domain;
-
-  // Lambdas venant du AgentStack
+  ingestFn: lambda.Function;
+  summarizeFn: lambda.Function;
   fetchFn: lambda.Function;
   geocodeFn: lambda.Function;
   computeFn: lambda.Function;
   persistFn: lambda.Function;
-  ingestFn: lambda.Function;
+  mapDataFn: lambda.Function;
 }
 
 export class ApiStack extends cdk.Stack {
-  public readonly httpApiUrl: string;
-  public readonly wsApiUrl: string;
-
   constructor(scope: Construct, id: string, props: ApiProps) {
     super(scope, id, props);
 
-    //
-    // --- HTTP API ---
-    //
-    const httpApi = new apigwv2.HttpApi(this, "RescueMindHttpApi", {
-      apiName: "RescueMindHttpApi",
-    });
+    // 🚀 API Gateway
+	
+		   const api = new apigateway.RestApi(this, "RescueMindApi", {
+		  restApiName: "RescueMind Service",
+		  description: "API for incident management.",
+		  defaultCorsPreflightOptions: {
+			allowOrigins: apigateway.Cors.ALL_ORIGINS,
+			allowMethods: apigateway.Cors.ALL_METHODS,
+			allowHeaders: [
+			  "Content-Type",
+			  "X-Amz-Date",
+			  "Authorization",
+			  "X-Api-Key",
+			  "X-Amz-Security-Token",
+			],
+		  },
+		});
 
-    // Exemple : route POST /incident -> persistFn
-    httpApi.addRoutes({
-      path: "/incident",
-      methods: [apigwv2.HttpMethod.POST],
-      integration: new integrations.HttpLambdaIntegration(
-        "PersistIncidentIntegration",
-        props.persistFn
-      ),
-    });
+	
+	
 
-    this.httpApiUrl = httpApi.apiEndpoint;
+    // 🧩 Helper for routes
+    const addLambdaRoute = (path: string, method: string, fn: lambda.Function) => {
+      const resource = api.root.addResource(path);
+      resource.addMethod(method, new apigateway.LambdaIntegration(fn));
+    };
 
-    //
-    // --- WebSocket API ---
-    //
-    const wsApi = new apigwv2.WebSocketApi(this, "RescueMindWsApi", {
-      apiName: "RescueMindWsApi",
-      connectRouteOptions: {
-        integration: new integrations.WebSocketLambdaIntegration(
-          "ConnectIntegration",
-          props.fetchFn
-        ),
-      },
-      disconnectRouteOptions: {
-        integration: new integrations.WebSocketLambdaIntegration(
-          "DisconnectIntegration",
-          props.fetchFn
-        ),
-      },
-      defaultRouteOptions: {
-        integration: new integrations.WebSocketLambdaIntegration(
-          "DefaultIntegration",
-          props.fetchFn
-        ),
-      },
-    });
+    // 🔗 Define endpoints
+    addLambdaRoute("ingest", "POST", props.ingestFn);
+    addLambdaRoute("summarize", "POST", props.summarizeFn);
+    addLambdaRoute("fetch", "GET", props.fetchFn);
+    addLambdaRoute("geocode", "POST", props.geocodeFn);
+    addLambdaRoute("compute", "POST", props.computeFn);
+    addLambdaRoute("persist", "POST", props.persistFn);
+    addLambdaRoute("mapdata", "GET", props.mapDataFn);
 
-    const wsStage = new apigwv2.WebSocketStage(this, "RescueMindWsStage", {
-      webSocketApi: wsApi,
-      stageName: "dev",
-      autoDeploy: true,
-    });
-
-    this.wsApiUrl = wsStage.url;
-
-    //
-    // --- Outputs ---
-    //
-    new cdk.CfnOutput(this, "HttpApiUrl", { value: this.httpApiUrl });
-    new cdk.CfnOutput(this, "WsApiUrl", { value: this.wsApiUrl });
+    // 🌐 Output endpoint URL
+    new cdk.CfnOutput(this, "ApiUrl", { value: api.url ?? "Unknown" });
   }
 }

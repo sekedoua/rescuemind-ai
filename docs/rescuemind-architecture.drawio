@@ -1,0 +1,89 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="RescueMind AWS Architecture">
+    <mxGraphModel dx="1300" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Data Plane -->
+        <mxCell id="dynamodb" value="[AWS: DynamoDB]" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="200" y="80" width="140" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s3" value="[AWS: S3]" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="200" y="180" width="140" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="eventbridge" value="[AWS: EventBridge]" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="200" y="280" width="140" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- AI Lambdas -->
+        <mxCell id="lambda-ingest" value="🤖 Lambda: Ingest" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="450" y="80" width="160" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lambda-geocode" value="🤖 Lambda: Geocode" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="450" y="180" width="160" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lambda-compute" value="🤖 Lambda: Compute" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="450" y="280" width="160" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Other Lambdas -->
+        <mxCell id="lambda-persist" value="Lambda: Persist" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="450" y="380" width="160" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lambda-notify" value="Lambda: Notify" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="450" y="480" width="160" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- API -->
+        <mxCell id="api-rest" value="[AWS: API Gateway REST]" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="750" y="160" width="180" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="api-ws" value="[AWS: API Gateway WS]" style="shape=rectangle;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="750" y="260" width="180" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Outputs -->
+        <mxCell id="output-dashboard" value="📊 Incident Dashboard" style="shape=ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="160" width="180" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="output-responders" value="📱 Responders App" style="shape=ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="260" width="180" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Explicit Connectors -->
+        <mxCell id="edge1" style="endArrow=block;html=1;" edge="1" parent="1" source="lambda-ingest" target="dynamodb">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge2" style="endArrow=block;html=1;" edge="1" parent="1" source="dynamodb" target="lambda-geocode">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge3" style="endArrow=block;html=1;" edge="1" parent="1" source="lambda-geocode" target="lambda-compute">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge4" style="endArrow=block;html=1;" edge="1" parent="1" source="lambda-compute" target="lambda-persist">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge5" style="endArrow=block;html=1;" edge="1" parent="1" source="lambda-persist" target="api-rest">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge6" style="endArrow=block;html=1;" edge="1" parent="1" source="lambda-notify" target="api-ws">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge7" style="endArrow=block;html=1;" edge="1" parent="1" source="api-rest" target="output-dashboard">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="edge8" style="endArrow=block;html=1;" edge="1" parent="1" source="api-ws" target="output-responders">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,1 @@
+{ "incidentId": {"S": "INC-001"}, "type": {"S": "flood"}, "city": {"S": "Miami"}, "latitude": {"N": "25.7617"}, "longitude": {"N": "-80.1918"}, "status": {"S": "active"} }

@@ -1,0 +1,124 @@
+{
+  "RescueMind-Data-IncidentsTable307EBBA6-NQT3Q119LW2X": [
+    {
+      "PutRequest": {
+        "Item": {
+          "incidentId": {"S": "INC-003"},
+          "type": {"S": "earthquake"},
+          "city": {"S": "Los Angeles"},
+          "latitude": {"N": "34.0522"},
+          "longitude": {"N": "-118.2437"},
+          "status": {"S": "active"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "incidentId": {"S": "INC-004"},
+          "type": {"S": "hurricane"},
+          "city": {"S": "New Orleans"},
+          "latitude": {"N": "29.9511"},
+          "longitude": {"N": "-90.0715"},
+          "status": {"S": "warning"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "incidentId": {"S": "INC-005"},
+          "type": {"S": "chemical spill"},
+          "city": {"S": "Houston"},
+          "latitude": {"N": "29.7604"},
+          "longitude": {"N": "-95.3698"},
+          "status": {"S": "active"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "incidentId": {"S": "INC-006"},
+          "type": {"S": "tornado"},
+          "city": {"S": "Dallas"},
+          "latitude": {"N": "32.7767"},
+          "longitude": {"N": "-96.7970"},
+          "status": {"S": "alert"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "incidentId": {"S": "INC-007"},
+          "type": {"S": "wildfire"},
+          "city": {"S": "San Francisco"},
+          "latitude": {"N": "37.7749"},
+          "longitude": {"N": "-122.4194"},
+          "status": {"S": "contained"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "incidentId": {"S": "INC-008"},
+          "type": {"S": "power outage"},
+          "city": {"S": "Chicago"},
+          "latitude": {"N": "41.8781"},
+          "longitude": {"N": "-87.6298"},
+          "status": {"S": "active"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "incidentId": {"S": "INC-009"},
+          "type": {"S": "gas leak"},
+          "city": {"S": "Boston"},
+          "latitude": {"N": "42.3601"},
+          "longitude": {"N": "-71.0589"},
+          "status": {"S": "warning"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "incidentId": {"S": "INC-010"},
+          "type": {"S": "building collapse"},
+          "city": {"S": "Philadelphia"},
+          "latitude": {"N": "39.9526"},
+          "longitude": {"N": "-75.1652"},
+          "status": {"S": "critical"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "incidentId": {"S": "INC-011"},
+          "type": {"S": "blizzard"},
+          "city": {"S": "Denver"},
+          "latitude": {"N": "39.7392"},
+          "longitude": {"N": "-104.9903"},
+          "status": {"S": "active"}
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "incidentId": {"S": "INC-012"},
+          "type": {"S": "heatwave"},
+          "city": {"S": "Phoenix"},
+          "latitude": {"N": "33.4484"},
+          "longitude": {"N": "-112.0740"},
+          "status": {"S": "warning"}
+        }
+      }
+    }
+  ]
+}
